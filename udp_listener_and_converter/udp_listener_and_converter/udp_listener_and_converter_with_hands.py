@@ -5,7 +5,7 @@
 Скрипт создаёт ROS2-ноду "udp_listener_and_converter" для того, чтобы 
 принимать данные с unity-программы от Фёдора по udp-сокету, 
 преобразовывать их в формат для unitree_h1 и отправлять в топик 
-"positions_to_unitree".
+"positions_to_unitree". Передаётся информация от всех сочленений.
 
 Преобразование происходит по следующему принципу:
     1. Происходит сопоставление joints между unitree_h1 и Фёдором.
@@ -19,7 +19,7 @@ ANNOTATION
 The script creates a ROS2 node "udp_listener_and_converter" in order to
 receive data from unity-program from Fedor via a udp socket,
 convert them into the format for unitree_h1 and send them to the topic
-"positions_to_unitree".
+"positions_to_unitree". Send information from all joints.
 
 The transformation occurs according to the following principle:
     1. The joints between unitree_h1 and Fedor are compared.
@@ -28,16 +28,17 @@ The transformation occurs according to the following principle:
     system of the unity program to the coordinate system of unitree_h1
 '''
 
-import json
 import socket
-
+import json
 import numpy as np
 import rclpy
-from rclpy.node import Node
 from std_msgs.msg import String
+from rclpy.node import Node
 
 
 HOST = '192.168.123.162'
+HOST = '192.168.211.129'
+
 PORT = 34567
 DATA_PAYLOAD = 2000
 TOPIC = "positions_to_unitree"
@@ -52,12 +53,12 @@ TRANSLATER_FOR_JOINTS_FROM_FEDOR_TO_UNITREE_H1 = {
     4: None,  # L.WristR
     5: None,  # L.WristS
     6: None,  # L.WristF
-    7: None,  # L.Finger.Index
-    8: None,  # L.Finger.Little
-    9: None,  # L.Finger.Middle
-    10: None,  # L.Finger.Ring
-    11: None,  # L.Finger.Thumbs
-    12: None,  # L.Finger.Thumb
+    7: 9,  # L.Finger.Index
+    8: 6,  # L.Finger.Little
+    9: 8,  # L.Finger.Middle
+    10: 7,  # L.Finger.Ring
+    11: 11,  # L.Finger.Thumbs
+    12: 10,  # L.Finger.Thumb
     13: 12,  # R.ShoulderF -> right_shoulder_roll_joint
     14: 13,  # R.ShoulderS -> right_shoulder_pitch_joint
     15: 14,  # R.ElbowR -> right_shoulder_yaw_joint
@@ -65,12 +66,12 @@ TRANSLATER_FOR_JOINTS_FROM_FEDOR_TO_UNITREE_H1 = {
     17: None,  # R.WristR
     18: None,  # R.WristS
     19: None,  # R.WristF
-    20: None,  # R.Finger.Index
-    21: None,  # R.Finger.Little
-    22: None,  # R.Finger.Middle
-    23: None,  # R.Finger.Ring
-    24: None,  # R.Finger.Thumb
-    25: None  # R.Finger.Thumbs
+    20: 3,  # R.Finger.Index
+    21: 0,  # R.Finger.Little
+    22: 2,  # R.Finger.Middle
+    23: 1,  # R.Finger.Ring
+    24: 4,  # R.Finger.Thumb
+    25: 5  # R.Finger.Thumbs
 }
 
 LIMITS_OF_JOINTS_UNITREE_H1 = {
@@ -86,21 +87,37 @@ LIMITS_OF_JOINTS_UNITREE_H1 = {
     9: [None, None],  # NOT USED
     10: [-0.87, 0.52],  # left_ankle_joint S
     11: [-0.87, 0.52],  # right_ankle_joint S
-    12: [-1.9, 0.5],  # right_shoulder_pitch_joint M 
-    13: [-2.2, 0.0],  # right_shoulder_roll_joint M 
+    12: [-1.9, 0.5],  # right_shoulder_pitch_joint M
+    13: [-2.2, 0.0],  # right_shoulder_roll_joint M
     14: [-1.5, 1.3],  # right_shoulder_yaw_joint M
     15: [-0.5, 1.65],  # right_elbow_joint M
     16: [-1.9, 0.5],  # left_shoulder_pitch_joint M
     17: [0.0, 2.2],  # left_shoulder_roll_joint M
     18: [-1.3, 1.5],  # left_shoulder_yaw_joint M
-    19: [-0.5, 1.65]  # left_elbow_joint M
+    19: [-0.5, 1.65],  # left_elbow_joint M
+    20: [0.0, 1.0],  # right_pinky
+    21: [0.0, 1.0],  # right_ring
+    22: [0.0, 1.0],  # right_middle
+    23: [0.0, 1.0],  # right_index
+    24: [0.0, 1.0],  # right_thumb-bend
+    25: [0.0, 1.0],  # right_thumb-rotation
+    26: [0.0, 1.0],  # left_pinky
+    27: [0.0, 1.0],  # left_ring
+    28: [0.0, 1.0],  # left_middle
+    29: [0.0, 1.0],  # left_index
+    30: [0.0, 1.0],  # left_thumb-bend
+    31: [0.0, 1.0]  # left_thumb-rotation
+}
+
+LIMITS_OF_JOINTS_UNITREE_HANDS = {
+
 }
 
 LIMITS_OF_JOINTS_FEDOR = {
     0: [-12.0, 4.0],  # L_ShoulderF        [4.0, -12] + назад совпадают
     1: [0.0, 12.0],  # L_ShoulderS    [0, 12] + вверх от тела совпадают
     2: [-9.0, 9.0],  # L_ElbowR        [-9.0, 9.0] + против часовой совпадают
-    3: [-12.0, 0,0],  # L_Elbow                 [0, -12] + вниз совпадают
+    3: [-12.0, 0, 0],  # L_Elbow                 [0, -12] + вниз совпадают
     4: [-3.820199, 6.866401],  # L_WristR
     5: [-7.0, 2.0022],  # L_WristS
     6: [-2.501599, 3.0],  # L_WristF
@@ -131,7 +148,7 @@ def map_range(value: float,
               in_max: float,
               out_min: float,
               out_max: float
-) -> float:
+              ) -> float:
     """Преобразует значение из одного диапазона в другой."""
     return (value - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
@@ -172,9 +189,10 @@ def convert_to_unitree_h1(data: list) -> dict:
 
 class UdpListenerAndConverterNode(Node):
     """ROS2 нода для прослушивания UDP и конвертации данных."""
+
     def __init__(self):
         super().__init__("udp_listener_and_converter")
-        
+
         self.impact = 1.0
         self.time_for_return_control = 8.0
         self.control_dt = 1 / FREQUENCY
@@ -182,7 +200,7 @@ class UdpListenerAndConverterNode(Node):
         # Create a UDP socket
         self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.s.bind((HOST, PORT))
-        
+
         # Status information
         self.get_logger().info(f"Node is listening {HOST}:{PORT}")
 
@@ -191,7 +209,6 @@ class UdpListenerAndConverterNode(Node):
 
         self.msg = String()
         self.last_data = None
-        
 
     def timer_callback(self):
         """Обратный вызов таймера для обработки данных."""
@@ -202,13 +219,12 @@ class UdpListenerAndConverterNode(Node):
         except Exception as e:
             self.get_logger().error(f"Error processing data: {e}")
             return
-        
+
         # Convert the data to the format of unitree_h1
         self.last_data = json.dumps(convert_to_unitree_h1(self.formated_type))
-        self.msg.data =  self.last_data + '$' + str(self.impact)
+        self.msg.data = self.last_data + '$' + str(self.impact)
         self.get_logger().info(f'Impact = {round(self.impact, 3)}')
         self.publisher.publish(self.msg)
-
 
     def return_control(self):
         if self.last_data is not None:
@@ -217,7 +233,8 @@ class UdpListenerAndConverterNode(Node):
             for _ in range(int(steps) + 1):
                 self.impact -= value_of_step
                 self.impact = np.clip(self.impact, 0.0, 1.0)
-                self.msg.data =  self.last_data + '$' + str(round(self.impact, 3))
+                self.msg.data = self.last_data + \
+                    '$' + str(round(self.impact, 3))
                 self.get_logger().info(f'Impact = {round(self.impact, 3)}')
                 self.publisher.publish(self.msg)
 
@@ -232,10 +249,10 @@ def main(args=None):
 
     except KeyboardInterrupt:
         node.get_logger().info('Stop node.')
-        
+
     except Exception as e:
         node.get_logger().error(e)
-            
+
     finally:
         node.return_control()
         node.s.close()

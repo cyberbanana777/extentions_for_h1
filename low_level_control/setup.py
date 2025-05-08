@@ -20,7 +20,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'low_level_control = low_level_control.low_level_node:main'
+            'low_level_control_with_hands = low_level_control.low_level_node_with_hands:main',
+            'low_level_control_without_hands = low_level_control.low_level_node_without_hands:main',
         ],
     },
 )

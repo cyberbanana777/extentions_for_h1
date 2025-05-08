@@ -22,7 +22,8 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'udp_listener_and_converter = udp_listener_and_converter.udp_listener_and_converter:main',
+            'udp_listener_and_converter_with_hands = udp_listener_and_converter.udp_listener_and_converter_with_hands:main',
+            'udp_listener_and_converter_without_hands = udp_listener_and_converter.udp_listener_and_converter_without_hands:main',
         ],
     },
 )
