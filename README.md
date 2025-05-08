@@ -169,4 +169,4 @@ ros2 run udp_listener_and_converter udp_listener_and_converter
  - **Запуск отдельных нод.** Этот метод хорош для использования конкретных нод или в случает отладки
 
 # Карта нод и топиков
-![[docs/structure_of_nodes_for_different_scripts.png]]
+![](docs/structure_of_nodes_for_different_scripts.png)
