@@ -30,27 +30,19 @@ Example message:
 {“16”: -0.1, “19”: 1.65, “12”: -0.1, “13”: 0.0, “14”: -0.1, “15”: 1.65}$1.0
 '''
 
-import json
-<<<<<<< HEAD
 import time
-=======
->>>>>>> 6f4835ade37443ce8aa8931b2b87ada43ecaac6b
-
+import json
 import numpy as np
 import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 from unitree_go.msg import LowState
-from unitree_go.msg import LowCmd
 from unitree_sdk2py.utils.crc import CRC
+from unitree_go.msg import LowCmd
 
 
 FREQUENCY = 333.33
-<<<<<<< HEAD
 MAX_JOINT_VELOCITY = 3.0
-=======
-MAX_JOINT_VELOCITY = 3.5
->>>>>>> 6f4835ade37443ce8aa8931b2b87ada43ecaac6b
 
 JOINT_INDEX = {
     'right_hip_roll_joint': 0,
@@ -88,11 +80,11 @@ LIMITS_OF_JOINTS_UNITREE_H1 = {
     9: [None, None],  # NOT USED
     10: [-0.87, 0.52],  # left_ankle_joint S
     11: [-0.87, 0.52],  # right_ankle_joint S
-    12: [-1.9, 0.5],  # right_shoulder_pitch_joint M 
-    13: [-2.2, 0.0], # right_shoulder_roll_joint M
-    14: [-1.5, 1.3], # right_shoulder_yaw_joint M
-    15: [-0.5, 1.65],  # right_elbow_joint M           
-    16: [-1.9, 0.5],  # left_shoulder_pitch_joint M 
+    12: [-1.9, 0.5],  # right_shoulder_pitch_joint M
+    13: [-2.2, 0.0],  # right_shoulder_roll_joint M
+    14: [-1.5, 1.3],  # right_shoulder_yaw_joint M
+    15: [-0.5, 1.65],  # right_elbow_joint M
+    16: [-1.9, 0.5],  # left_shoulder_pitch_joint M
     17: [0.0, 2.2],  # left_shoulder_roll_joint M
     18: [-1.3, 1.5],  # left_shoulder_yaw_joint M
     19: [-0.5, 1.65]  # left_elbow_joint M
@@ -114,7 +106,7 @@ class LowLevelControlNode(Node):
             JOINT_INDEX['left_shoulder_yaw_joint'],
             JOINT_INDEX['left_elbow_joint']
         ]
-        
+
         self.target_pos = {
             0: 0.0,  # right_hip_roll_joint M
             1: 0.0,  # right_hip_pitch_joint M
@@ -189,10 +181,7 @@ class LowLevelControlNode(Node):
 
         # частота обновления
         self.control_dt = 1 / FREQUENCY
-<<<<<<< HEAD
         self.time_for_return_control = 1.0
-=======
->>>>>>> 6f4835ade37443ce8aa8931b2b87ada43ecaac6b
 
         self.max_joint_delta = MAX_JOINT_VELOCITY * self.control_dt
 
@@ -215,7 +204,7 @@ class LowLevelControlNode(Node):
         # коррекция ошибки - отсутсвие запрашиваемого поля в полях сообщения LowCmd
         # нужно для нормального подсчёта crc
         setattr(
-            self.create_cmd_msg, 
+            self.create_cmd_msg,
             '__idl_typename__',
             'unitree_go.msg.dds_.LowCmd_'
         )
@@ -226,10 +215,9 @@ class LowLevelControlNode(Node):
         self.cmd_msg.level_flag = 255
         self.cmd_msg.gpio = 0
 
-
         self.publisher_arm_sdk = self.create_publisher(LowCmd, 'arm_sdk', 10)
         self.timer_arm_sdk = self.create_timer(
-            self.control_dt, 
+            self.control_dt,
             self.timer_callback_arm_sdk
         )
 
@@ -237,7 +225,6 @@ class LowLevelControlNode(Node):
         self.subscription_positions_to_unitree
 
         self.get_logger().info('Node started')
-
 
     def listener_callback_positions_to_unitree(self, msg):
         raw_data = msg.data
@@ -252,31 +239,24 @@ class LowLevelControlNode(Node):
             for i in self.active_joints:
                 self.target_pos[i] = np.clip(
                     pose[str(i)],
-                    LIMITS_OF_JOINTS_UNITREE_H1[i][0],  
+                    LIMITS_OF_JOINTS_UNITREE_H1[i][0],
                     LIMITS_OF_JOINTS_UNITREE_H1[i][1]
                 )
         except Exception as e:
             self.get_logger().error(e)
-
 
     def listener_callback_LowCmd(self, msg):
         '''Обновляем текущее положение'''
         for i in self.active_joints:
             self.current_jpos[i] = msg.motor_state[i].q
 
-
     def timer_callback_arm_sdk(self):
 
-<<<<<<< HEAD
         if self.timer_call_count <= 5 or self.impact == 0.0:
             self.current_jpos_des = self.current_jpos.copy()
-            self.get_logger().info(f'Обновление current_jpos_des = {self.current_jpos_des}')
-            
-=======
-        if self.timer_call_count == 1 or self.impact == 0.0:
-            self.current_jpos_des = self.current_jpos.copy()
+            self.get_logger().info(
+                f'Обновление current_jpos_des = {self.current_jpos_des}')
 
->>>>>>> 6f4835ade37443ce8aa8931b2b87ada43ecaac6b
         else:
             self.cmd_msg.motor_cmd[JOINT_INDEX['NOT USED']].q = self.impact
             for i in self.active_joints:
@@ -297,14 +277,11 @@ class LowLevelControlNode(Node):
                 self.cmd_msg.motor_cmd[j].kd = coeff_and_mode[1]
                 self.cmd_msg.motor_cmd[j].mode = coeff_and_mode[2]
 
-            
         # Подсчет контрольной суммы, использует CRC для проверки целостности команд
         self.crc = CRC()
         self.cmd_msg.crc = self.crc.Crc(self.cmd_msg)
         self.publisher_arm_sdk.publish(self.cmd_msg)
-<<<<<<< HEAD
         self.timer_call_count += 1
-
 
     def return_control(self):
         steps = self.time_for_return_control / self.control_dt
@@ -312,12 +289,10 @@ class LowLevelControlNode(Node):
         for _ in range(int(steps) + 1):
             self.impact -= value_of_step
             self.impact = np.clip(self.impact, 0.0, 1.0)
-            self.cmd_msg.motor_cmd[JOINT_INDEX['NOT USED']].q = self.impact 
+            self.cmd_msg.motor_cmd[JOINT_INDEX['NOT USED']].q = self.impact
             self.get_logger().info(f'Impact = {round(self.impact, 3)}')
             self.publisher_arm_sdk.publish(self.cmd_msg)
             time.sleep(self.control_dt)
-=======
->>>>>>> 6f4835ade37443ce8aa8931b2b87ada43ecaac6b
 
 
 def determine_coeff_and_mode(index_of_joint_of_unitree_h1: int) -> tuple:
@@ -349,33 +324,22 @@ def determine_coeff_and_mode(index_of_joint_of_unitree_h1: int) -> tuple:
     return (Kp, Kd, mode)
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 6f4835ade37443ce8aa8931b2b87ada43ecaac6b
 def main(args=None):
     rclpy.init(args=args)
     node = LowLevelControlNode()
 
     try:
-        rclpy.spin(node)    
+        rclpy.spin(node)
 
     except KeyboardInterrupt:
-<<<<<<< HEAD
         node.get_logger().info('Stop node.')
-=======
-        pass
->>>>>>> 6f4835ade37443ce8aa8931b2b87ada43ecaac6b
 
     except Exception as e:
         node.get_logger().error(e)
-    
+
     finally:
-<<<<<<< HEAD
         if node.impact != 0.0:
             node.return_control()
-=======
->>>>>>> 6f4835ade37443ce8aa8931b2b87ada43ecaac6b
         node.get_logger().info('Node stoped.')
         node.destroy_node()
         rclpy.shutdown()
