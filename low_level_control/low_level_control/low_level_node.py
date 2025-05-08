@@ -37,8 +37,8 @@ import rclpy
 from rclpy.node import Node
 from std_msgs.msg import String
 from unitree_go.msg import LowState
-from unitree_sdk2py.utils.crc import CRC
 from unitree_go.msg import LowCmd
+from unitree_sdk2py.utils.crc import CRC
 
 
 FREQUENCY = 333.33

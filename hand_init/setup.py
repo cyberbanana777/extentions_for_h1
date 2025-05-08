@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'wrist_init'
+package_name = 'hand_init'
 path_to_bin = 'resource/communication_pack/build/inspire_hand' 
 
 setup(
@@ -23,7 +23,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'wrist_init = wrist_init.wrist_init:main',
+            'hand_init = hand_init.hand_init:main',
         ],
     },
 )
