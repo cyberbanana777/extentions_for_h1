@@ -36,8 +36,10 @@ from std_msgs.msg import String
 from rclpy.node import Node
 
 
-HOST = '192.168.123.162'
+# HOST = '192.168.123.162'
 HOST = '192.168.211.129'
+
+
 
 PORT = 34567
 DATA_PAYLOAD = 2000
@@ -53,12 +55,12 @@ TRANSLATER_FOR_JOINTS_FROM_FEDOR_TO_UNITREE_H1 = {
     4: None,  # L.WristR
     5: None,  # L.WristS
     6: None,  # L.WristF
-    7: 9,  # L.Finger.Index
-    8: 6,  # L.Finger.Little
-    9: 8,  # L.Finger.Middle
-    10: 7,  # L.Finger.Ring
-    11: 11,  # L.Finger.Thumbs
-    12: 10,  # L.Finger.Thumb
+    7: 29,  # L.Finger.Index
+    8: 26,  # L.Finger.Little
+    9: 28,  # L.Finger.Middle
+    10: 27,  # L.Finger.Ring
+    11: 31,  # L.Finger.Thumbs
+    12: 30,  # L.Finger.Thumb
     13: 12,  # R.ShoulderF -> right_shoulder_roll_joint
     14: 13,  # R.ShoulderS -> right_shoulder_pitch_joint
     15: 14,  # R.ElbowR -> right_shoulder_yaw_joint
@@ -66,12 +68,12 @@ TRANSLATER_FOR_JOINTS_FROM_FEDOR_TO_UNITREE_H1 = {
     17: None,  # R.WristR
     18: None,  # R.WristS
     19: None,  # R.WristF
-    20: 3,  # R.Finger.Index
-    21: 0,  # R.Finger.Little
-    22: 2,  # R.Finger.Middle
-    23: 1,  # R.Finger.Ring
-    24: 4,  # R.Finger.Thumb
-    25: 5  # R.Finger.Thumbs
+    20: 23,  # R.Finger.Index
+    21: 20,  # R.Finger.Little
+    22: 22,  # R.Finger.Middle
+    23: 21,  # R.Finger.Ring
+    24: 24,  # R.Finger.Thumb
+    25: 25  # R.Finger.Thumbs
 }
 
 LIMITS_OF_JOINTS_UNITREE_H1 = {
@@ -121,12 +123,12 @@ LIMITS_OF_JOINTS_FEDOR = {
     4: [-3.820199, 6.866401],  # L_WristR
     5: [-7.0, 2.0022],  # L_WristS
     6: [-2.501599, 3.0],  # L_WristF
-    7: [None, None],  # L_Finger_Index
-    8: [None, None],  # L_Finger_Little
-    9: [None, None],  # L_Finger_Middle
-    10: [None, None],  # L_Finger_Ring
-    11: [None, None],  # L_Finger_ThumbS
-    12: [None, None],  # L_inger_Thumb
+    7: [1.0, 11.0],  # L_Finger_Index
+    9: [1.0, 11.0],  # L_Finger_Middle
+    8: [1.0, 11.0],  # L_Finger_Little
+    10: [1.0, 11.0],  # L_Finger_Ring
+    11: [1.0, 11.0],  # L_Finger_ThumbS
+    12: [1.0, 11.0],  # L_inger_Thumb
     13: [-12.0, 4.0],  # R_ShoulderF      [4.0, -12] + назад совпадают
     14: [-12.0, 0.0],  # R_ShoulderS        [0, -12] + вниз к телу совпадают
     15: [-9.0, 9.0],  # R_ElbowR            [-9.0, 9.0] + против часовой совпадают
@@ -134,12 +136,12 @@ LIMITS_OF_JOINTS_FEDOR = {
     17: [-11.0, 11.0],  # R_WristR
     18: [-2.0, 7.0],  # R_WristS
     19: [-1.734846, 3.000598],  # R_WristF
-    20: [None, None],  # R_Finger_Index
-    21: [None, None],  # R_Finger_Little
-    22: [None, None],  # R_Finger_Middle
-    23: [None, None],  # R_Finger_Ring
-    24: [None, None],  # R_Finger_ThumbS
-    25: [None, None]  # R_Finger_Thumb
+    20: [1.0, 11.0],  # R_Finger_Index
+    21: [1.0, 11.0],  # R_Finger_Little
+    22: [1.0, 11.0],  # R_Finger_Middle
+    23: [1.0, 11.0],  # R_Finger_Ring
+    24: [1.0, 11.0],  # R_Finger_ThumbS
+    25: [1.0, 11.0]  # R_Finger_Thumb
 }
 
 

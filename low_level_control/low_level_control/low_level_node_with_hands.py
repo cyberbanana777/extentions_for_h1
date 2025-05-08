@@ -381,20 +381,21 @@ class LowLevelControlNode(Node):
                 if key.isdigit():  # Проверяем, является ли ключ числом в строке
                     num = int(key)
                     if num <= 19:
-                        H1_pose[key] = value
+                        H1_pose[num] = value
                     else:
-                        hands_pose[key] = value
+                        hands_pose[num - 20] = value
 
             for i in self.active_joints_H1:
                 self.target_pos_H1[i] = np.clip(
-                    H1_pose[str(i)],
+                    H1_pose[i],
                     LIMITS_OF_JOINTS_UNITREE_H1[i][0],
                     LIMITS_OF_JOINTS_UNITREE_H1[i][1]
                 )
 
             for i in self.active_joints_hands:
+                self.get_logger().info(f'hands_pose = {hands_pose}')
                 self.target_pos_hands[i] = np.clip(
-                    hands_pose[str(i)],
+                    hands_pose[i],  
                     LIMITS_OF_JOINTS_UNITREE_HANDS[i][0],
                     LIMITS_OF_JOINTS_UNITREE_HANDS[i][1]
                 )
@@ -492,6 +493,7 @@ class LowLevelControlNode(Node):
             )
             clamped_delta_hands = round(clamped_delta_hands, 3)
             self.current_jpos_des_hands[i] += clamped_delta_hands
+            self.get_logger().info(f'current_jpos_des_hands = {str(self.current_jpos_des_hands)}')
 
         for i in self.active_joints_hands:
             self.cmd_msg_hands.cmds[i].q = self.current_jpos_des_hands[i]
