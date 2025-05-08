@@ -58,7 +58,7 @@ source install/setup.bash
 ```bash
 source ~/extentions_for_h1_ws/install/setup.bash
 ```
-	
+
 # Содержание репозитория:
 ## Краткое описание
  - Пакет **`button_analyzer`** - анализирует какая кнопка нажата и в зависимости от этого постит макрос-функцию, которая соответствует этой кнопке  
@@ -112,10 +112,10 @@ ros2 launch completed_scripts H1_control_by_buttons.launch.py
 ```
 Запускает сценарий управления роботом, с помощью кастомных заранее записанных макросов, через web-интерфейс.
 Ноды, которые запускаются в скрипте:
-1. `server_stand_up`
-2. `server_hear`
-3. `low_level_control`
-4. `button_analyzer`
+- `server_stand_up`
+- `server_hear`
+- `low_level_control`
+- `button_analyzer`
 
 ### Пакет hand_init
 Пакет позволяет создать топики для работы с модулями рук  `inspire hand`. После запуска появляются топики `/inspire/cmd` и `/inspire/state`. В топик `/inspire/cmd` постятся управляющие команды, а из топика `/inspire/state` можно получить feedback-информацию. 
@@ -158,10 +158,10 @@ ros2 run udp_listener_and_converter udp_listener_and_converter
 
 
 # Ссылки на другие ресурсы по теме
-[Установка служебных пакетов](https://github.com/unitreerobotics/unitree_ros2) (которые уже интегрированы в этот репозиторий) описана 
-[Информация о модуле рук от производителя Inspire hands](https://support.unitree.com/home/en/H1_developer/Dexterous_hand)
-[ROS2 docs](https://docs.ros.org/en/foxy/)
-[Работа с копирующим устройством от робота "Фёдор"](https://github.com/cyberbanana777/UKT_MIREA_ROBOT)
+- [Установка служебных пакетов](https://github.com/unitreerobotics/unitree_ros2) (которые уже интегрированы в этот репозиторий) описана 
+- [Информация о модуле рук от производителя Inspire hands](https://support.unitree.com/home/en/H1_developer/Dexterous_hand)
+- [ROS2 docs](https://docs.ros.org/en/foxy/)
+- [Работа с копирующим устройством от робота "Фёдор"](https://github.com/cyberbanana777/UKT_MIREA_ROBOT)
 
 # Запуск
 Использование пакетов возможно несколькими способами:
