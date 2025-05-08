@@ -3,7 +3,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 
 def main():
-    package_share_dir = get_package_share_directory('wrist_init')
+    package_share_dir = get_package_share_directory('hands_init')
 
     executable_path = os.path.join(package_share_dir, 'inspire_hand')
     cmd = ['sudo', '-S', executable_path, '-s', '/dev/ttyUSB0']

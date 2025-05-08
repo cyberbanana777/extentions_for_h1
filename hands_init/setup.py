@@ -1,6 +1,6 @@
 from setuptools import setup
 
-package_name = 'hand_init'
+package_name = 'hands_init'
 path_to_bin = 'resource/communication_pack/build/inspire_hand' 
 
 setup(
