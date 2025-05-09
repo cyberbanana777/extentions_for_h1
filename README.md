@@ -40,6 +40,12 @@ mkdir -p ~/extentions_for_h1_ws/src
 cd ~/extentions_for_h1_ws/src
 git clone https://github.com/cyberbanana777/extentions_for_h1.git .
 ```
+Далее необходимо собрать бинарники из исходиков для оного из пакетов.
+```bash
+cd ~/extentions_for_h1_ws/src/hands_init/resource/comminication_oack/build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make
+```
 Далее нужно открыть файл `~/.bashrc` в вашем любимом текстовом редакторе и закомментрировать строчку `source /opt/ros/foxy/setup.bash`. После сохранения этого файла, этот терминал можно закрыть. Также нужно открыть новый терминал и выполнить следующие команды
 ```bash
 cd ~/extentions_for_h1_ws
@@ -132,10 +138,14 @@ ros2 run high_level_control high_level_control
 ``` 
 
 ### Пакет low_level_control
-Пакет предназначен для управления роботом Unitree H1 с помощью low-level команд, команда представляет собой словарь, где ключи – номера моторов, а значения – угол поворота. Словари приходят как JSON-пакет от ноды `button_analyzer` или `upd_listener_and_converter`.
-#### Запуск low-level ноды 
+Пакет предназначен для управления роботом Unitree H1 с помощью low-level команд, команда представляет собой словарь, где ключи – номера моторов, а значения – угол поворота. Словари приходят как JSON-пакет от ноды `button_analyzer` или `upd_listener_and_converter`. В пакете реализовано 2 программы - одна запускает руки  без кистей и пальцев и другая - руки полностью. При работе тип `low-level` должен совпадать с типом `udp_listener_and_converter`. 
+#### Запуск low-level ноды без кистей и пальцев
 ```
-ros2 run low_level_control low_level_control
+ros2 run low_level_control low_level_control_without_hands
+``` 
+#### Запуск low-level ноды c кистями и пальцами
+```
+ros2 run low_level_control low_level_control_with_hands
 ``` 
 
 
@@ -146,10 +156,14 @@ ros2 run low_level_control low_level_control
 ros2 run macros_writer macros_writer
 ```
 ### Пакет udp_listener_and_converter
-Пакет предназначен для чтения udp-сокета, т.е. получений углов поворота с копирующего устройства от робота Фёдора, конвертирования углов из диапазона копирующего устройства в диапазон углов unitree_H1 и отправки их в топик `/positions_to_unitree`. 
-#### Запуск udp_listener_and_converter ноды 
+Пакет предназначен для чтения udp-сокета, т.е. получений углов поворота с копирующего устройства от робота Фёдора, конвертирования углов из диапазона копирующего устройства в диапазон углов unitree_H1 и отправки их в топик `/positions_to_unitree`. В пакете реализовано 2 программы - одна запускает руки  без кистей и пальцев и другая - руки полностью. При работе тип `low-level` должен совпадать с типом `udp_listener_and_converter`. 
+#### Запуск udp_listener_and_converter ноды без кистей и пальцев 
 ```
-ros2 run udp_listener_and_converter udp_listener_and_converter
+ros2 run udp_listener_and_converter udp_listener_and_converter_without_hands
+```
+#### Запуск udp_listener_and_converter ноды c кистями и пальцами
+```
+ros2 run udp_listener_and_converter udp_listener_and_converter_with_hands
 ```
 ### Пакет (служебный) unitree 
 Пакет поставляется производителем робота unitree H1 и интегрирован в этот репозиторий для удобства. В нём описаны типы сообщений, которые используются в роботе unitree H1.
@@ -170,3 +184,5 @@ ros2 run udp_listener_and_converter udp_listener_and_converter
 
 # Карта нод и топиков
 ![](docs/structure_of_nodes_for_different_scripts.png)
+# Предложения и корректировки
+Если Вы нашли ошибку, неточность, у Вас есть предложения по улучшению или вопросы, то напишите в телеграмм [сюда](https://t.me/Alex_19846) (Александр) или [сюда](https://t.me/Kika_01) (Алиса).
