@@ -6,7 +6,7 @@ def generate_launch_description():
     return LaunchDescription([
         Node(
             package="buttons_server",
-            executable="server_stand_up"
+            executable="server_stand_up_with_hands"
         ),
         Node(
             package="buttons_server",
@@ -14,12 +14,14 @@ def generate_launch_description():
         ),
         Node(
             package="button_analyzer",
-            executable="button_analyzer"
+            executable="button_analyzer_with_hands"
         ),
         Node(
             package="low_level_control",
-            executable="low_level_control"
+            executable="low_level_control_with_hands"
+        ),
+        Node(
+            package="hands_init",
+            executable="hands_init"   
         )
-
-
     ])

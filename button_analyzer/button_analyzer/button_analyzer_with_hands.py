@@ -37,17 +37,24 @@ class ButtonAnalyzer(Node):
         package_share_dir = get_package_share_directory('button_analyzer')
 
         self.macroses = {
-            "selfie": 0,
-            "wave": 1,
-            "free": 2,
-            "photo": 3,
+            "wave": 0,
+            "photo": 1,
+            "attention": 2,
+            "selfie": 3,
+            "1_offer_hand": 4,
+            "2_shake_hand": 5,
+            "1_offer_docs": 6,
+            "2_grip_docs": 7,
+            "3_hold_docs": 8,
+            "4_give_docs": 9,
+            "5_release_docs": 10 
         }
 
         self.index = None
 
         self.files = []
         for macros_name in self.macroses:
-            file_path = os.path.join(package_share_dir, f'{macros_name}.txt')
+            file_path = os.path.join(package_share_dir, f"{macros_name}_with_hands.txt")
             with open(file_path, 'r') as f:
                 data = [line.rstrip('\n') for line in f]
                 self.files.append(data)
@@ -58,8 +65,8 @@ class ButtonAnalyzer(Node):
 
         for i in self.macroses.keys():
             self.get_logger().info(f"macros_founded: {i}")
-            self.get_logger().info(
-                f"macros_include: {self.files[self.macroses[i]]}")
+            # self.get_logger().info(
+            #     f"macros_include: {self.files[self.macroses[i]]}")
 
         self.last_pressed_button = "None"
 

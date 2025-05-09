@@ -81,7 +81,7 @@
                 #photo-btn {
                     background-color: #4444ff;
                 }
-                #free-btn {
+                #attention-btn {
                     background-color: #ffff44;
                     color: #333;
                     text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
@@ -197,9 +197,9 @@
                     <span class="btn-label">Вместе веселее</span>
                 </button>
                 
-                <button id="free-btn" class="big-btn {{ 'active' if buttons.free else '' }}" 
-                        onclick="activateButton('free')">
-                    Свободная кнопка
+                <button id="attention-btn" class="big-btn {{ 'active' if buttons.attention else '' }}" 
+                        onclick="activateButton('attention')">
+                    Обратите внимание
                     <span class="btn-label">Нажмите меня</span>
                 </button>
             </div>
@@ -211,7 +211,7 @@
                         {% if active_button == 'selfie' %}Сэлфи режим
                         {% elif active_button == 'wave' %}Режим "Помахать рукой"
                         {% elif active_button == 'photo' %}Режим "Приглашаю на фото"
-                        {% elif active_button == 'free' %}Свободная кнопка активна
+                        {% elif active_button == 'attention' %}Свободная кнопка активна
                         {% endif %}
                     {% else %}
                         Режим не выбран
@@ -227,7 +227,7 @@
                     'selfie': 'rgba(255, 100, 100, 0.2)',
                     'wave': 'rgba(100, 255, 100, 0.2)',
                     'photo': 'rgba(100, 100, 255, 0.2)',
-                    'free': 'rgba(255, 255, 100, 0.2)'
+                    'attention': 'rgba(255, 255, 100, 0.2)'
                 };
 
                 // Блокировка скролла
@@ -261,7 +261,7 @@
                                     case 'selfie': statusText = "Сэлфи режим"; break;
                                     case 'wave': statusText = "Режим 'Помахать рукой'"; break;
                                     case 'photo': statusText = "Режим 'Приглашаю на фото'"; break;
-                                    case 'free': statusText = "Свободная кнопка активна"; break;
+                                    case 'attention': statusText = "Свободная кнопка активна"; break;
                                 }
                             }
                             document.getElementById('statusText').textContent = statusText;

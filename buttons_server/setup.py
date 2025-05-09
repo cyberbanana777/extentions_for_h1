@@ -10,7 +10,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name, ['resource/html_skeleton.html']),
+        ('share/' + package_name, ['resource/html_skeleton_with_hands.html']),
+        ('share/' + package_name, ['resource/html_skeleton_without_hands.html']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -24,7 +25,8 @@ setup(
     entry_points={
         'console_scripts': [
             "hear_server = buttons_server.hear_server:main",
-            "server_stand_up = buttons_server.server_stand_up:main",
+            "server_stand_up_without_hands = buttons_server.server_stand_up_without_hands:main",
+            "server_stand_up_with_hands = buttons_server.server_stand_up_with_hands:main",
         ],
     },
 )

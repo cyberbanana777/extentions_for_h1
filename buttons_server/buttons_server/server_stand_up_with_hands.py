@@ -1,22 +1,5 @@
 #!/usr/bin/env python3
 
-'''
-АННОТАЦИЯ
-Скрипт предназначен для запуска веб-сервера для управления кнопками.
-Запуск осуществляется на localhost на порту 5000.
-Опрос кнопок осуществляется с помощью API.
-Структура сайта описана в файле html_skeleton.html в папке resource этого пакета.
-'''
-
-'''
-ANNOTATION
-The script is designed to launch a web server to manage buttons.
-It is launched on localhost on port 5000.
-The buttons are polled using the API.
-The site structure is described in the html_skeleton.html file 
-in the resource folder of this package.
-'''
-
 import logging
 import os
 import threading
@@ -25,26 +8,30 @@ from datetime import datetime
 from ament_index_python.packages import get_package_share_directory
 from flask import Flask, jsonify, render_template_string, request
 
-
 app = Flask(__name__)
 
-# Состояния кнопок
+# Состояния кнопок (расширенный список для всех кнопок из HTML)
 buttons = {
-    "selfie": False,
     "wave": False,
     "photo": False,
-    "free": False
+    "attention": False,
+    "selfie": False,
+    "1_offer_hand": False,
+    "2_shake_hand": False,
+    "1_offer_docs": False,
+    "2_grip_docs": False,
+    "3_hold_docs": False,
+    "4_give_docs": False,
+    "5_release_docs": False
 }
 active_button = None
 state_history = []
 lock = threading.Lock()
 
-
 package_share_dir = get_package_share_directory('buttons_server')
-file_path = os.path.join(package_share_dir, 'html_skeleton.html')
+file_path = os.path.join(package_share_dir, 'html_skeleton_with_hands.html')
 with open(file_path, 'r') as f:
     html_skeleton = f.read()
-
 
 @app.route('/')
 def home():
@@ -56,23 +43,23 @@ def home():
         state_history=state_history,
     )
 
-
 @app.route('/activate')
 def activate():
     """Активация/деактивация кнопок через API."""
     global active_button, buttons
     btn = request.args.get('btn')
+    active = request.args.get('active', 'true').lower() == 'true'
     
     if btn not in buttons:
         return jsonify({"error": "Неизвестная кнопка"}), 400
     
     with lock:
-        # Если нажата уже активная кнопка - деактивируем
-        if active_button == btn:
+        # Если деактивируем текущую активную кнопку
+        if not active and active_button == btn:
             buttons[btn] = False
             active_button = None
             message = get_button_message(btn, False)
-        else:
+        elif active:
             # Деактивируем предыдущую активную кнопку
             if active_button:
                 buttons[active_button] = False
@@ -81,6 +68,8 @@ def activate():
             buttons[btn] = True
             active_button = btn
             message = get_button_message(btn, True)
+        else:
+            return jsonify({"error": "Некорректный запрос"}), 400
         
         log_change(message)
         
@@ -90,39 +79,57 @@ def activate():
             "message": message,
         })
 
-
 def get_button_message(btn, active):
     """
     Возвращает сообщение для лога в зависимости от состояния кнопки.
-    
-    Args:
-        btn (str): Идентификатор кнопки
-        active (bool): Флаг активности кнопки
-    
-    Returns:
-        str: Текстовое описание изменения состояния
     """
     messages = {
-        "selfie": {
-            True: "Активирован режим 'Сэлфи'",
-            False: "Режим 'Сэлфи' деактивирован",
-        },
         "wave": {
             True: "Активирован режим 'Помахать рукой'",
             False: "Режим 'Помахать рукой' деактивирован",
         },
         "photo": {
-            True: "Активирован режим 'Приглашаю на фото'",
-            False: "Режим 'Приглашаю на фото' деактивирован",
+            True: "Активирован режим 'Пригласить на фото'",
+            False: "Режим 'Пригласить на фото' деактивирован",
         },
-        "free": {
-            True: "Свободная кнопка активирована",
-            False: "Свободная кнопка деактивирована",
+        "attention": {
+            True: "Активирован режим 'Обратите внимание'",
+            False: "Режим 'Обратите внимание' деактивирован",
+        },
+        "selfie": {
+            True: "Активирован режим 'Сэлфи'",
+            False: "Режим 'Сэлфи' деактивирован",
+        },
+        "1_offer_hand": {
+            True: "Режим 'Подать руку' активирован",
+            False: "Режим 'Подать руку' деактивирован",
+        },
+        "2_shake_hand": {
+            True: "Режим 'Пожать руку' активирован",
+            False: "Режим 'Пожать руку' деактивирован",
+        },
+        "1_offer_docs": {
+            True: "Режим 'Принять документы' активирован",
+            False: "Режим 'Принять документы' деактивирован",
+        },
+        "2_grip_docs": {
+            True: "Режим 'Взять документы' активирован",
+            False: "Режим 'Взять документы' деактивирован",
+        },
+        "3_hold_docs": {
+            True: "Режим 'Держать документы' активирован",
+            False: "Режим 'Держать документы' деактивирован",
+        },
+        "4_give_docs": {
+            True: "Режим 'Отдать документы' активирован",
+            False: "Режим 'Отдать документы' деактивирован",
+        },
+        "5_release_docs": {
+            True: "Режим 'Отпустить документы' активирован",
+            False: "Режим 'Отпустить документы' деактивирован",
         },
     }
     return messages[btn][active]
-
-
 
 @app.route('/api/get_state')
 def get_state():
@@ -134,16 +141,13 @@ def get_state():
             "last_change": state_history[-1] if state_history else "Нет изменений",
         })
 
-
 def log_change(message):
     """Логирование изменений состояния с ограничением истории до 100 записей."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_entry = f"[{timestamp}] {message}"
     state_history.append(log_entry)
-    # print(log_entry) - Расскомментить для вывода логов
     if len(state_history) > 100:
         state_history.pop(0)
-
 
 @app.route('/api/status')
 def api_status():
@@ -154,13 +158,10 @@ def api_status():
         'timestamp': datetime.now().isoformat(),
     })
 
-
 def main():
     log = logging.getLogger('werkzeug')
     log.setLevel(logging.ERROR)
-
     app.run(host='0.0.0.0', port=5000, debug=False)
-
 
 if __name__ == '__main__':
     main()

@@ -23,7 +23,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'hand_init = hand_init.hand_init:main',
+            'hands_init = hands_init.hands_init:main',
         ],
     },
 )
