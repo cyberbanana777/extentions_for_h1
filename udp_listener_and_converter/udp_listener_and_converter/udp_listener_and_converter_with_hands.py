@@ -48,8 +48,13 @@ FREQUENCY = 333.3  # Частота мониторинга в Герцах
 
 
 TRANSLATER_FOR_JOINTS_FROM_FEDOR_TO_UNITREE_H1 = {
-    0: 16,  # L.ShoDATA_PAYLOAD = 2000
-istF
+    0: 16,  # L.ShoulderF -> left_shoulder_roll_joint
+    1: 17,  # L.ShoulderS -> left_shoulder_pitch_joint
+    2: 18,  # L.ElbowR -> left_shoulder_yaw_joint
+    3: 19,  # L.Elbow -> left_elbow_joint
+    4: None,  # L.WristR
+    5: None,  # L.WristS
+    6: None,  # L.WristF
     7: 29,  # L.Finger.Index
     8: 26,  # L.Finger.Little
     9: 28,  # L.Finger.Middle
@@ -136,7 +141,7 @@ LIMITS_OF_JOINTS_FEDOR = {
     21: [11.0, 0.0],   # R_Finger_Little     [0, 11] [0.595, 11]
     22: [11.0, 0.0],   # R_Finger_Middle     [0, 11] [0.0749, 11]
     23: [11.0, 0.0],   # R_Finger_Ring       [0, 11]
-    24: [3.0, -9.0],  # R_Finger_ThumbS     [-9, 3] [-9, 1.173] +сжать -разжать
+    24: [3.0, 9.0],  # R_Finger_ThumbS     [-9, 3] [-9, 1.173] +сжать -разжать
     25: [1.0, 11.0]  # R_Finger_Thumb       [0, 11] [-0.034, 11]
 }
 
