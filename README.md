@@ -14,6 +14,7 @@ pip3 install flask
 ```
 ## Unitree_skd2_python
 ```bash
+cd ~
 git clone https://github.com/unitreerobotics/unitree_sdk2_python.git
 cd unitree_sdk2_python
 pip3 install -e . # Установка

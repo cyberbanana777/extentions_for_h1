@@ -48,13 +48,8 @@ FREQUENCY = 333.3  # Частота мониторинга в Герцах
 
 
 TRANSLATER_FOR_JOINTS_FROM_FEDOR_TO_UNITREE_H1 = {
-    0: 16,  # L.ShoulderF -> left_shoulder_roll_joint
-    1: 17,  # L.ShoulderS -> left_shoulder_pitch_joint
-    2: 18,  # L.ElbowR -> left_shoulder_yaw_joint
-    3: 19,  # L.Elbow -> left_elbow_joint
-    4: None,  # L.WristR
-    5: None,  # L.WristS
-    6: None,  # L.WristF
+    0: 16,  # L.ShoDATA_PAYLOAD = 2000
+istF
     7: 29,  # L.Finger.Index
     8: 26,  # L.Finger.Little
     9: 28,  # L.Finger.Middle
@@ -123,12 +118,13 @@ LIMITS_OF_JOINTS_FEDOR = {
     4: [-3.820199, 6.866401],  # L_WristR
     5: [-7.0, 2.0022],  # L_WristS
     6: [-2.501599, 3.0],  # L_WristF
-    7: [1.0, 11.0],  # L_Finger_Index
-    9: [1.0, 11.0],  # L_Finger_Middle
-    8: [1.0, 11.0],  # L_Finger_Little
-    10: [1.0, 11.0],  # L_Finger_Ring
-    11: [1.0, 11.0],  # L_Finger_ThumbS
-    12: [1.0, 11.0],  # L_inger_Thumb
+    7: [-11.0, 0.0],  # L_Finger_Index       [0, -11] -согнут +разогнут
+    9: [-11.0, 0.0],   # L_Finger_Middle      [0, -11]
+    8: [-11.0, 0.0],   # L_Finger_Little      [0, -11]
+    10: [-11.0, 0.0],   # L_Finger_Ring       [0, -11]
+    11: [-3.0, 9.0],  # L_Finger_ThumbS     [-3, 9] -сжать, +разжать поворот
+    12: [11.0, 0.0],  # L_inger_Thumb       [0, 11] сгибание
+
     13: [-12.0, 4.0],  # R_ShoulderF      [4.0, -12] + назад совпадают
     14: [-12.0, 0.0],  # R_ShoulderS        [0, -12] + вниз к телу совпадают
     15: [-9.0, 9.0],  # R_ElbowR            [-9.0, 9.0] + против часовой совпадают
@@ -136,12 +132,12 @@ LIMITS_OF_JOINTS_FEDOR = {
     17: [-11.0, 11.0],  # R_WristR
     18: [-2.0, 7.0],  # R_WristS
     19: [-1.734846, 3.000598],  # R_WristF
-    20: [1.0, 11.0],  # R_Finger_Index
-    21: [1.0, 11.0],  # R_Finger_Little
-    22: [1.0, 11.0],  # R_Finger_Middle
-    23: [1.0, 11.0],  # R_Finger_Ring
-    24: [1.0, 11.0],  # R_Finger_ThumbS
-    25: [1.0, 11.0]  # R_Finger_Thumb
+    20: [11.0, 0.0],   # R_Finger_Index      [0, 11] +согнут 0 разогнут
+    21: [11.0, 0.0],   # R_Finger_Little     [0, 11] [0.595, 11]
+    22: [11.0, 0.0],   # R_Finger_Middle     [0, 11] [0.0749, 11]
+    23: [11.0, 0.0],   # R_Finger_Ring       [0, 11]
+    24: [3.0, -9.0],  # R_Finger_ThumbS     [-9, 3] [-9, 1.173] +сжать -разжать
+    25: [1.0, 11.0]  # R_Finger_Thumb       [0, 11] [-0.034, 11]
 }
 
 
